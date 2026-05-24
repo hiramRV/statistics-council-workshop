@@ -7,3 +7,7 @@ The agenda is the following:
 - How to clone a repository and sync it locally.
 - How to commit changes and see changes.
 - How to create and manage a branch. 
+
+For this we have two sample files:
+- Example Report: With basic usage of R and Qarto
+- Example Report 2: A basic report template with some spaces to fill. 

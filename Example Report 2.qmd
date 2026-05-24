@@ -1,0 +1,68 @@
+---
+title: "Workshop Report"
+format: html
+editor: visual
+---
+
+## Collaborators
+
+| Name | Institution |
+|------|-------------|
+|      |             |
+|      |             |
+|      |             |
+|      |             |
+
+------------------------------------------------------------------------
+
+## Introduction
+
+*Describe the topic of your report here. What question are you trying to answer? Why is it relevant?*
+
+------------------------------------------------------------------------
+
+## Data
+
+*Briefly describe the dataset you are using: where it comes from, how many observations it has, and what variables are included.*
+
+```{r}
+# Load your data here
+# Example: data <- read.csv("your_file.csv")
+
+```
+
+*Add a short description of the variables that are most relevant to your analysis.*
+
+------------------------------------------------------------------------
+
+## Analysis
+
+*Explain the method or approach you are using to analyse the data.*
+
+```{r}
+# Write your analysis code here
+
+```
+
+------------------------------------------------------------------------
+
+## Results
+
+*Summarise what you found. You can reference numbers, tables, or plots produced above.*
+
+```{r}
+# Add any additional plots or tables here
+
+```
+
+------------------------------------------------------------------------
+
+## Conclusions
+
+*What do the results mean? What are the limitations of your analysis? What would you do next?*
+
+------------------------------------------------------------------------
+
+## References
+
+*List any sources, datasets, or packages you used.*
