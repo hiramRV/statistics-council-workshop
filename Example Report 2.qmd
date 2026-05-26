@@ -5,7 +5,7 @@ editor: source
 ---
 
 ```{r}
-#| echo: false # Tells R to hide the code chunk
+#| echo: false # Tells R to hide the code chunk 
 #| warning: false # Tells R to hide the chunk warnings
 #| message: false # # Tells R to hide the chunk messages
 
@@ -16,7 +16,6 @@ library(faraway) # Used version 1.0.9
 # packageVersion("faraway")
 ```
 
-
 ## Collaborators
 
 | Name | Institution |
@@ -26,20 +25,16 @@ library(faraway) # Used version 1.0.9
 |      |             |
 |      |             |
 
-
-
 ## Introduction
 
 *Describe the topic of your report here. What question are you trying to answer? Why is it relevant?*
-
-
 
 ## Data
 
 *Briefly describe the dataset you are using: where it comes from, how many observations it has, and what variables are included. All data pre-processing must be described in words and in the code*
 
-
 ```{r load data}
+#| eval: false
 data(wcgs, package="faraway")
 wcgs = na.omit(wcgs) # Comment on how many participants were removed!
 descTab = wcgs %>% group_by(chd) %>% 
@@ -47,7 +42,7 @@ descTab = wcgs %>% group_by(chd) %>%
             sdAge = sd(age),
             mChol = mean(chol, na.rm = T),
             sdChol = sd(chol, na.rm = T))
-xtable(descTab, digits = 0)
+xtable(descTab, digits = 3)
 ```
 
 \begin{table}[ht]
@@ -64,7 +59,7 @@ xtable(descTab, digits = 0)
 
 *Add a short description of the variables that are most relevant to your analysis.*
 
-Colour palette: https://htmlcolorcodes.com/ 
+Colour palette: https://htmlcolorcodes.com/
 
 ```{r descFig}
 #| label: fig-hist
@@ -73,11 +68,11 @@ Colour palette: https://htmlcolorcodes.com/
 #| warning: false
 #| message: false
 #| layout-ncol: 2
-#| layout-nrow: 2
+#| layout-nrow: 1
 
 
 ggplot(data = wcgs)+
-  geom_histogram(aes(x = chol), col = "black", fill = "lightblue")+
+  geom_histogram(aes(x = chol), col = "black", fill = "#7CCCF7")+
   theme_bw() +
   theme(panel.background = element_rect(fill = "#FFDCBF"),
         plot.background = element_rect((fill = "#FFDCBF")))
@@ -96,7 +91,7 @@ The sample distributions for the independent variables cholesterol and systolic 
 
 $$
 f(Y_t|S_{1:(t-1)}, Y_{1:(t-1)}) = f(Y_t|S_t)
-$${#eq-hmm}
+$$ {#eq-hmm}
 
 The random variable $Y$ only depends on the hidden state $S$, as indicated in [@eq-hmm].
 
@@ -113,10 +108,10 @@ Only number equations that are referred to in the text.
 &= \beta_0 + \beta_1 x_1
 \end{align*}
 
-
 Sometimes it can be nice to include pseudocode to explain a function. Pseudocode is code that is not functional but describes the general flow
+
 ```{r}
-#| eval: false
+#| eval: false # Tells R to only show the chunk code
 MLEfunction {
   initialise betaVector
   calculate logLikelihood
@@ -129,13 +124,13 @@ MLEfunction {
 }
 ```
 
-
-
 ## Results
 
 *Summarise what you found. You can reference numbers, tables, or plots produced above.*
 
 ```{r}
+#| output: false
+#| echo: false
 mod1 <- glm(chd ~ height , family = binomial, wcgs)
 summary(mod1)
 mod2 <- glm(chd ~ height + cigs, family = binomial, wcgs)
@@ -180,20 +175,17 @@ xtable(mod2)
 \end{tabular}
 \end{table}
 
-
 The results of the best model is presented in [@tbl-mod1]
 
 *It is always fine to run 10 models without reporting the exact coefficients for all of them! But make sure to report the relevant statistics!*
 
 ## Discussion
 
-*In the results you only report your findings, the discussion is for the interpretation and what the results mean. For instance, here you can discuss the relative importance of covariates, or why the findings are (not) surprising. Be sure to include some comments on limitations and future research ideas if you have any* 
+*In the results you only report your findings, the discussion is for the interpretation and what the results mean. For instance, here you can discuss the relative importance of covariates, or why the findings are (not) surprising. Be sure to include some comments on limitations and future research ideas if you have any*
 
 ## Conclusions
 
 *Summarise the main findings of your analysis*
-
-
 
 ## References
 
