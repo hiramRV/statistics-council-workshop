@@ -1,8 +1,21 @@
 ---
 title: "Workshop Report"
-format: html
-editor: visual
+format: pdf
+editor: source
 ---
+
+```{r}
+#| echo: false # Tells R to hide the code chunk
+#| warning: false # Tells R to hide the chunk warnings
+#| message: false # # Tells R to hide the chunk messages
+
+library(tidyverse)
+library(xtable)
+library(faraway) # Used version 1.0.9 
+
+# packageVersion("faraway")
+```
+
 
 ## Collaborators
 
@@ -13,55 +26,174 @@ editor: visual
 |      |             |
 |      |             |
 
-------------------------------------------------------------------------
+
 
 ## Introduction
 
 *Describe the topic of your report here. What question are you trying to answer? Why is it relevant?*
 
-------------------------------------------------------------------------
+
 
 ## Data
 
-*Briefly describe the dataset you are using: where it comes from, how many observations it has, and what variables are included.*
+*Briefly describe the dataset you are using: where it comes from, how many observations it has, and what variables are included. All data pre-processing must be described in words and in the code*
 
-```{r}
-# Load your data here
-# Example: data <- read.csv("your_file.csv")
 
+```{r load data}
+data(wcgs, package="faraway")
+wcgs = na.omit(wcgs) # Comment on how many participants were removed!
+descTab = wcgs %>% group_by(chd) %>% 
+  summarise(mAge = mean(age),
+            sdAge = sd(age),
+            mChol = mean(chol, na.rm = T),
+            sdChol = sd(chol, na.rm = T))
+xtable(descTab, digits = 0)
 ```
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lccccc}
+  \hline
+  & CHD & $M$ Age & $SD$ Age & $M$ Chol & sdChol \\ 
+  \hline
+  1 & no & 46.08 & 5.46 & 224.26 & 42.22 \\ 
+  2 & yes & 48.49 & 5.80 & 250.07 & 49.40 \\ 
+   \hline
+\end{tabular}
+\end{table}
 
 *Add a short description of the variables that are most relevant to your analysis.*
 
-------------------------------------------------------------------------
+Colour palette: https://htmlcolorcodes.com/ 
 
-## Analysis
+```{r descFig}
+#| label: fig-hist
+#| fig-cap: Histograms
+#| fig-subcap: ["Cholesterol", "Systolic BP"]
+#| warning: false
+#| message: false
+#| layout-ncol: 2
+#| layout-nrow: 2
+
+
+ggplot(data = wcgs)+
+  geom_histogram(aes(x = chol), col = "black", fill = "lightblue")+
+  theme_bw() +
+  theme(panel.background = element_rect(fill = "#FFDCBF"),
+        plot.background = element_rect((fill = "#FFDCBF")))
+ggplot(data = wcgs)+
+  geom_histogram(aes(x = sdp), col = "black", fill = "lightblue")+
+  theme_bw() +
+    theme(panel.background = element_rect(fill = "#FFDCBF"),
+        plot.background = element_rect((fill = "#FFDCBF")))
+```
+
+The sample distributions for the independent variables cholesterol and systolic blood pressure (BP) are displayed in [@fig-hist].
+
+## Methods/Analysis/Statistical theory
 
 *Explain the method or approach you are using to analyse the data.*
 
-```{r}
-# Write your analysis code here
+$$
+f(Y_t|S_{1:(t-1)}, Y_{1:(t-1)}) = f(Y_t|S_t)
+$${#eq-hmm}
 
+The random variable $Y$ only depends on the hidden state $S$, as indicated in [@eq-hmm].
+
+Sometimes Latex does not render nicely within the dollar-dollar environment. Then you might use raw Latex code instead.
+
+"Manual" latex: https://editor.codecogs.com/
+
+Only number equations that are referred to in the text.
+
+\begin{align*}
+\text{logit}(p) &= \log(odds)\\
+&=\log (\frac{p}{1-p})\\
+&= \eta\\
+&= \beta_0 + \beta_1 x_1
+\end{align*}
+
+
+Sometimes it can be nice to include pseudocode to explain a function. Pseudocode is code that is not functional but describes the general flow
+```{r}
+#| eval: false
+MLEfunction {
+  initialise betaVector
+  calculate logLikelihood
+  
+  maximising loop {
+    update betaVector
+    calculate logLikelihoodNew
+  }
+  return(betaVector)
+}
 ```
 
-------------------------------------------------------------------------
+
 
 ## Results
 
 *Summarise what you found. You can reference numbers, tables, or plots produced above.*
 
 ```{r}
-# Add any additional plots or tables here
+mod1 <- glm(chd ~ height , family = binomial, wcgs)
+summary(mod1)
+mod2 <- glm(chd ~ height + cigs, family = binomial, wcgs)
+summary(mod2)
+mod3 <- glm(chd ~ height + cigs + chol, family = binomial, wcgs)
+summary(mod3)
 
+deviances = anova(mod1, mod2, mod3)
+deviances
+# xtable(deviances)
 ```
 
-------------------------------------------------------------------------
+\begin{table}[ht]
+\centering
+\begin{tabular}{lrrrrr}
+  \hline
+ & Resid. Df & Resid. Dev & Df & Deviance & Pr($>$Chi) \\ 
+  \hline
+1 & 3138 & 1768.34 &  &  &  \\ 
+  2 & 3137 & 1736.33 & 1 & 32.01 & 0.0000 \\ 
+  3 & 3136 & 1667.08 & 1 & 69.24 & 0.0000 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+```{r}
+xtable(mod2)
+```
+
+\begin{table}[ht]
+\caption{Logistic regression model predicting coronary heart disease}
+\label{tbl-mod1}
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
+  \hline
+(Intercept) & -4.5016 & 1.8419 & -2.44 & 0.0145 \\ 
+  height & 0.0252 & 0.0263 & 0.96 & 0.3383 \\ 
+  cigs & 0.0231 & 0.0040 & 5.72 & 0.0000 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+
+The results of the best model is presented in [@tbl-mod1]
+
+*It is always fine to run 10 models without reporting the exact coefficients for all of them! But make sure to report the relevant statistics!*
+
+## Discussion
+
+*In the results you only report your findings, the discussion is for the interpretation and what the results mean. For instance, here you can discuss the relative importance of covariates, or why the findings are (not) surprising. Be sure to include some comments on limitations and future research ideas if you have any* 
 
 ## Conclusions
 
-*What do the results mean? What are the limitations of your analysis? What would you do next?*
+*Summarise the main findings of your analysis*
 
-------------------------------------------------------------------------
+
 
 ## References
 
